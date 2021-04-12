@@ -5,19 +5,34 @@ import internal.GlobalVariable as GlobalVariable
 import com.kms.katalon.core.configuration.RunConfiguration as RunConfiguration
 import com.kms.katalon.core.mobile.keyword.MobileBuiltInKeywords as Mobile
 import com.kms.katalon.core.util.internal.PathUtil as PathUtil
+import com.kms.katalon.core.appium.driver.AppiumDriverManager
+import io.appium.java_client.android.AndroidDriver
+import org.openqa.selenium.remote.DesiredCapabilities
+import com.kms.katalon.core.mobile.driver.MobileDriverType
+
 
 Mobile.comment('Story: Verify correct alarm message')
 
 Mobile.comment('Given that user has started an application')
 
-'Get full directory\'s path of android application'
-def appPath = PathUtil.relativeToAbsolutePath(GlobalVariable.G_AndroidApp, RunConfiguration.getProjectDir())
+// Set the Browserstack credentials: USERNAME and ACCESS_KEY
+String browserStackServerURL = "https://siddharthamdemo1:3iskPrkpEsseiwerAxKB@hub-cloud.browserstack.com/wd/hub";
 
-Mobile.startApplication(appPath, false)
+DesiredCapabilities capabilities = new DesiredCapabilities();
+
+capabilities.setCapability("device", "Samsung Galaxy S8");
+
+//Set the app_url (returned on uploading app on Browserstack) in the 'app' capability
+capabilities.setCapability('app', 'bs://a72c2d7a326405ce8a7779ef39d59d49b1070248');
+
+AppiumDriverManager.createMobileDriver(MobileDriverType.ANDROID_DRIVER, capabilities, new URL(browserStackServerURL));
+
 
 Mobile.comment('And he navigates the application to Graphics form')
 
-Mobile.tap(findTestObject('Application/android.widget.TextView - Graphics'), GlobalVariable.G_Timeout)
+CustomKeywords.'bstack.bstackKeywords.tap'(findTestObject('Application/android.widget.TextView - Graphics'), GlobalVariable.G_Timeout)
+
+//Mobile.tap(findTestObject('Application/android.widget.TextView - Graphics'), GlobalVariable.G_Timeout)
 
 Mobile.comment('When he scroll to Xfermodes text')
 
